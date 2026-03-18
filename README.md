@@ -1,5 +1,9 @@
 # agentic-coding-setup
 
+## Claude Code Plugins:
+- https://github.com/lackeyjb/playwright-skill
+
+
 ## Mac Setup
 
 ### .claude
