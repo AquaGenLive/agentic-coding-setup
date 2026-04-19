@@ -16,3 +16,7 @@ Here you find a general Claude config + Skills.
 
 ### .config / TMUX
 The config folder contains a Mac specific TMUX config. TMUX makes the work with claude code and especially with the team mode more enjoyable.
+
+
+## Helpfull prompts
+- add-andrej-karpathy-skills-prompt.md -> improves CLAUDE.md (or AGENTS.md) with better coding principals.

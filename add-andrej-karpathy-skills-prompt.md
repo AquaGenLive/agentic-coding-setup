@@ -1,0 +1,4 @@
+Im giving you a set of coding guidelines called Karpathy Skills. Get the file from: https://raw.githubusercontent.com/multica-ai/andrej-karpathy-skills/refs/heads/main/CLAUDE.md
+— this is a CLAUDE.md file with four principles (Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution) that improve how you handle coding tasks. Do NOT overwrite any existing CLAUDE.md file. If one already exists, merge these four principles into it — add them as a new section without removing or changing anything that's already there. If no CLAUDE.md exists, save the file as-is to the project root. After installing, read the file back and confirm which principles are now active.
+
+Suggest to me how we can best integrate it to our setup
