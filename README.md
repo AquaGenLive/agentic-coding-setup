@@ -20,3 +20,4 @@ The config folder contains a Mac specific TMUX config. TMUX makes the work with 
 
 ## Helpfull prompts
 - add-andrej-karpathy-skills-prompt.md -> improves CLAUDE.md (or AGENTS.md) with better coding principals.
+- access_dev_logs.md -> enable the coding agent to fetch local logs to check for issues / exceptions on it's own.
