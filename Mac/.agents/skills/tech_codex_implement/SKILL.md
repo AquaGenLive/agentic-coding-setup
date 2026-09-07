@@ -102,7 +102,8 @@ relevant verification, affected documentation, and a consolidated handoff.
 Within the agreed scope, the worker owns that cycle without separate lead
 permission for each failing test, production edit, or test run. Complete the
 upfront scenario check for high-risk work; thereafter interrupt only for a
-material ambiguity, ownership/resource conflict, or action needing authority.
+material ambiguity, ownership/resource conflict, a concrete stall under section 4,
+or action needing authority.
 
 Default to one implementer for tightly coupled backend work plus one independent
 reviewer when needed. Parallelize only when both file ownership and execution
@@ -143,6 +144,16 @@ expand scope or delegate further without coordination. Related seam discussions
 can happen directly; the lead resolves decisions rather than forwarding every
 message. Transfer ownership explicitly before another implementer edits it.
 
+Reuse the same implementer for corrections to its active slice. At an accepted
+slice boundary, consider a fresh worker if the next assignment is materially
+different and accumulated context is dominated by completed work. Transfer only
+the current brief, relevant contracts/source paths, decisions, and evidence
+references; use `fork_turns: "none"`. Record the new owner in `status.md`, preserving
+any unresolved findings and attempt/escalation history. A context refresh does
+not authorize a model change or reset the count for unresolved work. Do not
+rotate agents on a fixed schedule or during an active correction merely to
+shrink context; avoid repeating discovery or accepted verification.
+
 The worker reports changed behavior/files, verification, and unresolved concerns
 in one handoff. Do not create agents just to update tracking or relay commands.
 The lead can inspect, diagnose, validate findings, and edit prose documentation;
@@ -172,6 +183,33 @@ When a test is wrong, validate it against the governing requirement and have
 the current implementer correct it. Record the reason and include the change in
 review. Do not weaken an assertion to hide a real defect, and do not change
 correct product behavior just to satisfy an over-specified test.
+
+### Intervene when a candidate stalls
+
+The worker identifies the next concrete artifact within its existing brief:
+a reproduced failure, implemented behavior, or verified candidate. Intervene
+when it repeatedly revisits the same uncertainty without new evidence, repeats
+an ineffective fix, or cannot produce that artifact. The worker should surface
+this itself; the lead may request the same diagnosis when the pattern is visible.
+Elapsed time alone, expected TDD failures, or waiting for a legitimately long
+command do not establish an implementation stall.
+
+Pause the unproductive loop and return one concise diagnostic handoff: the
+behavior still failing, what was tried and ruled out, the specific obstacle,
+and the proposed change of approach. The lead and worker use it to resolve the
+obstacle or revise the approach before continuing; a status-only redispatch is
+insufficient. Record only the resulting diagnosis/next action in `status.md`.
+Do not add recurring progress meetings, per-test gates, or arbitrary time/token
+limits. Useful new evidence and meaningful implementation progress justify
+continuing the autonomous cycle.
+
+A candidate explicitly unable to meet its contract counts as an unsuccessful
+attempt under section 5, even if no reviewable patch was submitted. A diagnostic
+pause alone does not consume an attempt, and environment-only failures retain
+their existing exception. Do not keep an exhausted candidate indefinitely open
+to avoid counting failure. After the first unsuccessful Luna attempt, Luna still
+gets its corrective attempt; escalate only after the second under the existing
+policy. The lead must not take over code changes.
 
 ## 5. Review findings, not preferences
 
@@ -253,6 +291,17 @@ Ask the user only for a material unresolved decision or unavailable authority.
   a concrete stall; do not request status already available from tools.
   Keep required user updates concise, without initiating worker exchanges just
   to produce them. Do not repeatedly poll unchanged status.
+- Apply waiting rules to every agent, including implementers and reviewers,
+  and to long-running commands as well as agent coordination. For unattended
+  tests/builds, use a substantial initial command wait and subsequent process
+  waits, normally 30–60 seconds within tool/runtime/communication limits. Reserve
+  short polling for interactive input or a concrete expectation of an immediate
+  result. When an outer tool yields, resume its wait handle rather than launch
+  another command to check the same process. Do not replace waiting with repeated
+  log reads or process-status checks. Inspect output to diagnose a specific
+  failure/stall; otherwise report completion and actionable results together.
+  Required user updates must not cause workers to poll more frequently. Pass
+  these rules in worker briefs instead of assuming workers inherit this skill.
 - At slice completion and the escalation checkpoint, record completed behavior,
   unresolved findings, attempt outcomes, and usage/time when available. Keep
   this concise. Distinguish cached input, uncached input, and output; do not
