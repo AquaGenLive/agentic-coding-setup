@@ -97,8 +97,9 @@ scenario or diagnosis immediately; do not repeat the same patch strategy.
 
 ## 3. Ownership and delegation
 
-Assign one implementer the complete slice: focused regression, implementation,
-relevant verification, affected documentation, and a consolidated handoff.
+Assign one implementer the complete slice: implementation plan, focused
+regression, implementation, relevant verification, affected documentation, and a
+consolidated handoff.
 Within the agreed scope, the worker owns that cycle without separate lead
 permission for each failing test, production edit, or test run. Complete the
 upfront scenario check for high-risk work; thereafter interrupt only for a
@@ -137,8 +138,11 @@ fallback choice before substitution. Continue unaffected read-only/coordination
 work; the lead must not silently take over coding.
 
 Give workers scoped briefs, relevant paths/requirements, commands, decisions,
-and ownership boundaries. Default to no history fork; include the smallest
-history window only when specific conversational evidence is necessary. Tell
+and ownership boundaries. Explicitly include section 4's plan-before-code rule in
+every Luna coding assignment and corrective follow-up; do not assume a worker
+without inherited history has read this skill. Default to no history fork;
+include the smallest history window only when specific conversational evidence
+is necessary. Tell
 workers they share the workspace, must preserve others' edits, and must not
 expand scope or delegate further without coordination. Related seam discussions
 can happen directly; the lead resolves decisions rather than forwarding every
@@ -160,6 +164,38 @@ The lead can inspect, diagnose, validate findings, and edit prose documentation;
 all implementation and test corrections remain with the assigned implementer.
 
 ## 4. Implement with meaningful TDD
+
+### Luna plans before editing code
+
+For every coding assignment, including a corrective attempt, Luna first inspects
+the relevant source, tests, and governing requirements, then writes a concise
+implementation plan before editing any code, tests, migrations, or configuration.
+Read-only investigation and baseline verification may precede the plan. Publish
+the plan in a worker message visible to the lead; private reasoning alone does
+not satisfy this step. Keep it proportional: a few concrete bullets suffice for
+a small fix. Cover:
+
+- the proposed approach and affected files/classes/functions, grounded in the
+  actual code, including existing helpers to reuse;
+- the order of changes and relevant contracts, state transitions, ownership or
+  transaction boundaries, and failure/rollback behavior;
+- the regression scenarios and verification that will demonstrate the outcome;
+- any material uncertainty or dependency that must be resolved before editing.
+
+For high-risk work, include this technical approach in section 2's existing
+scenario review with Astra Medium before production changes; do not add a
+separate review team or approval stage. For ordinary work, publish the plan and
+continue autonomously without waiting for lead/user approval. Escalate material
+ambiguity through the existing rules.
+
+Before a correction, update only the affected parts of the plan and explain
+why the previous approach failed. On resume, reuse a still-valid plan; revise it
+before edits if new evidence changes the approach. Keep the current plan summary
+or reference in `status.md` via the lead. Do not duplicate the full specification
+or create a separate planning document for every small change. Planning does
+not reset attempts or postpone section 4's stall intervention indefinitely.
+
+### Execute and verify
 
 The implementer normally owns both tests and production code for the slice.
 For new behavior and bug fixes, add or adapt a focused test first, demonstrate
