@@ -111,8 +111,10 @@ Keep one compact brief for each active slice:
 - Existing evidence, missing scenarios, next concrete artifact, verification,
   and any remaining integration dependency.
 
-Assign a complete autonomous cycle: plan, regression, implementation, affected
-documentation, relevant verification, and consolidated handoff. Do not require
+Assign a complete cycle: plan, early behavioral proof where required (section 4),
+implementation and affected documentation, focused verification, independent
+candidate review, required broad verification, and consolidated handoff. Outside
+the bounded proof/candidate checkpoints, workers act autonomously; do not require
 manager permission for each test, RED result, code edit, or verification run.
 Check shared fixtures/contracts, build output, databases, ports, and servers;
 serialize conflicting operations without repeatedly transferring test slots.
@@ -128,9 +130,11 @@ not silently take over coding. Preserve user-provided model overrides.
 
 Give each agent its role, owned scope, governing paths, and relevant workflow
 rules explicitly. Assignment leads read this skill; worker briefs include planning,
-waiting, attempt accounting, and stop-on-pause rules. Do not assume no-history
-workers inherited instructions. Use native agent communication for the team and
-valid returned agent identifiers; do not create separate user-owned tasks for
+the early-proof checkpoint, review-before-broad-verification order, attempt
+accounting, and stop-on-pause rules. Include the waiting rule from section 6
+verbatim in every assignment-lead, worker, reviewer, and escalation brief; a skill
+path alone is insufficient. Do not assume no-history agents inherited instructions.
+Use native agent communication for the team and valid returned agent identifiers; do not create separate user-owned tasks for
 internal subtasks. Tell agents they share a workspace and must preserve others'
 edits. The assignment lead resolves decisions; workers/reviewer may discuss an
 agreed contract directly without the root relaying messages.
@@ -163,6 +167,10 @@ The assignment lead checks scope, dependencies, and feasibility without duplicat
 technical review. For high-risk work (authorization, provider/payment effects,
 destructive changes, migrations, concurrency, recovery), the independent Astra
 Medium reviewer traces a few decisive scenarios through the proposed mechanism.
+The worker identifies one or two early-proof scenarios: real entry point, observable
+state and side effects (persisted where relevant), decisive failure/replay/race
+condition, and proposed test. The assignment lead includes them in this existing
+review; the reviewer checks whether they would expose a broken mechanism.
 Identify concrete missing facts/lookups/authority/atomic boundaries. Combine
 feedback into one pre-code exchange; resolve correctness blockers before production
 changes. No extra review team, document, or per-test approval stage. Ordinary work
@@ -181,12 +189,25 @@ and verify. Existing tests may supply the RED case. Compilation/setup failures
 alone do not prove the intended behavior fails. Test observable contracts rather
 than invented signatures, incidental structure, or redundant inventories.
 
-For risky integration, prove the critical path early through its real application/
-persistence boundary before expanding surrounding work: e.g. completion plus
-replay, delayed authority, or rollback after a late failure. Compilation and
-command-shape tests cannot substitute where transaction/persistence behavior is
-the risk. Reuse fixtures and accepted coverage. The worker continues autonomously
-after this proof; it is not a manager approval gate.
+For the high-risk mechanism identified above, implement only the smallest complete
+path needed to execute its agreed early-proof scenarios. Before expanding surrounding
+implementation, submit the focused proof through the assignment lead to the same
+reviewer: tested source state, test location, command/result, and behavior actually
+asserted. Keep the proof scope fixed during this check. The reviewer inspects the
+small executable artifact and its evidence, not just its name or passing count.
+It must cross the real application/persistence boundary relevant to the risk;
+reflection into a private validator, method-existence/source-text checks, or mocks
+bypassing that boundary cannot substitute. Reuse existing fixtures and valid proof.
+
+The assignment lead records proof acceptance or the missing scenario in `status.md`.
+Only after reviewer acceptance may the worker expand the implementation autonomously.
+This is one bounded checkpoint per risky mechanism, not root approval, a full
+candidate review, or permission for every test/edit. Resolve proof gaps within this
+checkpoint rather than adding review rounds or documents. Reopen it only for a
+material mechanism change or invalidated evidence; simple low-risk work skips it.
+An initial proof gap follows the existing stall/attempt rules, not automatic failure
+per test; an explicitly unable or submitted acceptance candidate still counts under
+section 5. Do not label an exhausted attempt an unfinished proof indefinitely.
 
 Correct faulty tests against governing requirements and include the reason in
 review. Never weaken a valid assertion or change correct behavior to satisfy an
@@ -219,6 +240,22 @@ observable impact, and evidence that would demonstrate resolution. Preferences,
 unsupported assumptions, and speculative redesigns do not block. Consolidate
 findings; report urgent blockers early only when they prevent wasted/unsafe work.
 
+For each blocker, the reviewer defines an observable closure condition. The
+assignment lead keeps a compact finding entry in `status.md`: ID, required outcome,
+focused evidence/test and source reference, review state (open/ready/closed), and
+attempt count. Link details instead of copying reports. The worker supplies evidence
+against each condition; a passing suite name alone does not close a finding.
+
+Submit initial and corrective candidates after focused/neighboring checks and
+before the next broad verification cycle. The assignment lead checks evidence
+completeness; the independent reviewer decides whether the scenarios and code
+resolve the findings. Return blockers together through the existing correction
+flow. Once substantive review clears the candidate, run required broad gates;
+review clearance is provisional until those gates pass. If a broad gate reveals
+a defect, correct it, re-review affected findings/paths, and renew invalidated
+verification. Preserve any explicit repository-mandated earlier check, but do not
+rerun broad suites merely to request review.
+
 At submission, identify scope, tested source state, commands/results, and concerns.
 The author stops editing the reviewed scope until consolidated feedback or an
 explicit withdrawal. Use a lightweight revision marker/manifest appropriate to
@@ -235,6 +272,11 @@ candidate is attempt 2. Local test iterations, expected RED, plan feedback, and
 environment-only failures do not each consume an attempt. Count failure when
 validated review/verification leaves a correctness requirement unresolved or the
 worker cannot complete it. Consolidate one review's findings into one correction.
+A candidate submitted with unresolved requirements is unsuccessful even before
+broad gates run, including missing required behavioral evidence identified by the
+lead's completeness check. Calling submission a "readiness check" must not create
+uncounted attempts. Track the same candidate through focused review and broad gates;
+do not count one rejection twice or withdraw it merely to erase a known failure.
 
 The assignment lead records counts against the same unresolved behavior in
 `status.md`, with owner and finding references. After failure 1, Luna gets one
@@ -254,22 +296,38 @@ review and required verification are never waived by escalation.
 
 ## 6. Verification and waiting discipline
 
-During correction, run focused and neighboring checks. At acceptance, satisfy
-repository/plan-required tests, compilation/type checks, builds, integration/E2E,
+During implementation/correction, run focused and neighboring checks; clear the
+candidate's substantive review before broad verification as specified in section 5.
+At acceptance, satisfy repository/plan-required tests, compilation/type checks,
+builds, integration/E2E,
 docs, and derived-artifact updates. Record command, outcome, and tested code state.
 Relevant subsequent source/fixture/config/schema edits invalidate corresponding
 evidence. Reuse valid results; do not repeat broad suites merely for handoffs.
 Synchronize required graph/derived artifacts at the prescribed stable boundary,
 not repeatedly per worker. Keep verbose output in logs with concise evidence links.
 
-All roles prefer completion notifications and substantial command waits, normally
-30–60 seconds within tool/runtime/communication limits. Short process polling is
-for interactive input or an expected immediate result. Resume yielded handles;
-do not substitute repeated log/process-status reads for waiting. Inspect output
-for a concrete failure/stall. A timeout alone needs no worker message or dispatch.
-Required user updates must not make workers poll more often. The root remains
-available for supervision without starting unrelated work. These live waits do
-not create recurring automations or guarantee wakeups while the task is inactive.
+Every dispatch must include this waiting rule, which also binds the root:
+
+> For non-interactive work, use completion notifications or waits of 30–60 seconds
+> where supported. When a command returns a running handle, resume that handle
+> with a substantial wait. Do not replace waiting with repeated log reads or
+> process-status checks. A timeout alone does not justify messaging another agent.
+
+Shorter waits require a concrete reason, such as interactive input, an imminent
+cancellation deadline, or a tool-enforced limit. State that reason once for the
+operation; "checking whether it finished" is insufficient. Use supported wait
+arguments explicitly rather than relying on a short default. Inspect output for
+a concrete failure/stall. Required user updates must not make workers poll faster.
+
+The assignment lead checks the implementer's initial waiting pattern and checks
+again after transfer to Astra High. If short polling appears without a valid reason,
+send one correction and verify the next wait complies; diagnose continued violations
+under the existing coordination/stall rules. No per-command approval or extra monitor
+agent. The root follows the same rule and checks team compliance during scheduled
+supervision. These checks must not themselves become frequent polling.
+
+The root remains available without starting unrelated work. Live waits do not
+create recurring automations or guarantee wakeups while the task is inactive.
 
 At acceptance/escalation, record outcomes, attempt counts, and readily available
 usage/time concisely. Distinguish cached input, uncached input, and output; do not
@@ -297,8 +355,9 @@ They may still resolve a material decision or satisfy a user-directed stop.
 
 At each check, read `status.md` and recent evidence to assess concrete progress,
 advancing implementation/verification, repeated failures or coordination loops,
-and scope compliance. Inspect only what resolves uncertainty; do not duplicate
-technical review or demand lengthy reports already covered by evidence.
+scope compliance, and compliance with the waiting rule. Inspect only what resolves
+uncertainty; do not duplicate technical review or demand lengthy reports already
+covered by evidence.
 
 - Meaningful progress: let work continue and clear any resolved/advancing stall.
 - Recoverable issue: give one focused steering message; let work continue.
