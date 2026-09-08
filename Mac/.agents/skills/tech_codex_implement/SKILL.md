@@ -1,369 +1,374 @@
 ---
 name: tech_codex_implement
 description: >
-  Implement or resume an approved specification and implementation plan using
-  behavior-focused TDD, small execution slices, selective delegation, and
-  independent review. Use when the user wants to code an existing spec with
-  the Codex implementation workflow. Not for creating specifications or for
-  analyzing a workflow without implementing it.
+  Implement or resume an approved specification and implementation plan through
+  one supervised assignment at a time, with focused planning, behavior-based
+  TDD, bounded implementation attempts, and independent review. Use when the
+  user wants to code an existing spec with the Codex implementation workflow.
+  Not for creating specifications or analyzing a workflow without implementing it.
 ---
 
 # Codex Specification Implementation
 
-Deliver the approved behavior with proportionate testing and review. The lead
-owns the result, validates findings, diagnoses blockers, and maintains tracking
-and documentation. The lead may inspect source and verification evidence but
+Deliver the approved behavior with proportionate planning, testing, and review.
+Follow the role assigned in your brief; only the root selects and spawns an
+assignment lead. An assignment lead executes one bounded assignment through
+workers, not through further assignment leads.
+
+## 1. Roles, scope, and authority
+
+| Role | Responsibility | Agent/model and effort |
+|---|---|---|
+| Root | User scope, one assignment at a time, supervision, overall progress, stopping boundary | Current root model/effort |
+| Assignment lead | Inspect dependencies, decompose, coordinate plans/implementation, validate findings, diagnose stalls, enforce escalation, obtain acceptance | `default`, `gpt-6-astra`, `medium` |
+| Implementer | Concrete plan, tests, code, affected docs, verification | `luna_worker`, `gpt-5.6-luna`, fixed `max` |
+| Escalated implementer | Resolve work after two unsuccessful Luna candidates | `default`, `gpt-6-astra`, `high` |
+| Independent reviewer | High-risk mechanism/scenario review and substantive candidate review | `default`, `gpt-6-astra`, `medium` |
+
+Both managerial roles may inspect source/evidence and edit prose/tracking, but
 must not edit application code, tests, migrations, build/runtime configuration,
 or implementation scripts, including small fixes and code conflict resolution.
-Delegate those changes through section 3. This restriction applies while
-executing this implementation workflow, not to an explicit request to edit the
-skill itself. Reuse agents for related activities.
+This restriction applies to implementation, not an explicit request to edit this
+skill. The reviewer remains read-only and distinct from both implementation authors.
 
-## 1. Establish scope and resume state
+The root spawns only one active assignment lead. While it runs, the root handles
+user communication, supervision, and decisions outside the assignment's authority;
+it starts no other assignment, implementation, or parallel investigation. It does
+not repeat routine plan/code reviews, relay worker findings, or supervise test runs.
+Supervisory investigation under section 7 is allowed. User scope changes and real
+blockers may be handled immediately; they need not wait for a scheduled check.
 
-Accept the spec directory/name or the unambiguous spec identified in the
-conversation. Locate its spec, plan, and tracking files; ask only if the target
-cannot be resolved. Preserve the plan's exact step names and dependencies.
+Within the assignment, permit one active implementer and one independent reviewer.
+Slices execute sequentially. This fits four active roles including the root.
+Only the assignment lead delegates implementation/review; workers and reviewers
+must not spawn additional agents or managers. A replacement author takes exclusive
+ownership after the former author stops editing. Do not overlap Luna and Astra
+High as writers or create extra worktrees/databases merely to fill agent slots.
 
-Use two complementary files in the spec directory, maintained by the lead:
+The assignment lead resolves routine technical choices and validated corrections
+within its mandate. Escalate material scope/requirement conflicts or unavailable
+authority to the root, which resolves them within existing approval or asks the
+user. Existing implementation approval remains valid. Do not commit, publish,
+deploy, consume a usage reset, or change paid settings beyond existing authority.
 
-- **`status.md`: current resume checkpoint.** Keep the active objective, current
-  slice/brief, accepted decisions relevant to it, completed side requests that
-  might otherwise recur, owners/agent IDs, Luna attempt count and escalation
-  state, unresolved findings/blockers, next action, and links to applicable
-  verification. Replace stale entries rather than appending a running diary.
-  Aim for roughly one screenful (about 60 lines); necessary active facts take
-  priority over a rigid limit. Link to detailed requirements and evidence.
-- **`progress.md`: overall milestone ledger.** Keep plan-step/slice completion,
-  accepted outcomes, durable decisions, and concise historical verification
-  references. It owns overall completion status; `status.md` owns the live
-  handoff. Do not duplicate the active finding list, briefs, or worker chatter
-  here. Store verbose outputs in logs and link to them.
+## 2. Resume and tracking ownership
 
-For an existing task without `status.md`, derive it once from the latest user
-instructions, relevant progress entries, working tree, and verification evidence.
-Preserve existing history; no wholesale tracking rewrite is needed. Create
-missing tracking files when beginning implementation, not when merely discussing
-or editing this skill.
+Resolve the spec directory and read applicable repository instructions, governing
+spec/plan sections, and relevant build/test scripts. Ask only if the target or a
+material requirement cannot be resolved. Preserve the plan's exact step names,
+dependencies, existing edits, accepted decisions, and valid verification.
 
-On initial setup, read governing repository instructions, the applicable spec/
-plan sections, and relevant build/test scripts. On resume or after compaction,
-read `status.md` first, reconcile it with newer user instructions and current
-source/evidence for the active slice, and follow links only as needed. Neither
-tracking file overrides the user or governing requirements. Inspect history to
-resolve a concrete gap; do not reload the whole execution narrative by default.
+Use two complementary files in the spec directory:
 
-Never redo a completed side request or settled decision merely because it
-appears in older conversation history. Reopen only for a new user instruction
-or concrete evidence that the result is invalid; record the reason. Preserve
-existing changes and valid verification rather than restarting completed work.
-Update the checkpoint when the active objective, ownership, findings, attempts,
-or next action changes and before a planned handoff/pause; do not wait for a
-compaction warning. Align both files at milestone transitions.
+- **Root owns `progress.md`:** overall milestone ledger, accepted outcomes,
+  durable decisions, historical verification references, and one compact current
+  supervision record (section 7). Do not copy the live slice brief/finding list or
+  append worker chatter. Update overall acceptance from assignment handoffs.
+- **Assignment lead owns `status.md` while active:** assignment ID/objective,
+  slice sequence/current brief, relevant decisions, completed side requests that
+  might recur, agent IDs/ownership, unresolved behavior and attempt counts,
+  escalation state, blockers, next action, and evidence links. Replace stale
+  entries rather than append a diary. Aim for about 60 lines; necessary active
+  facts take priority. Link to detailed requirements and evidence.
 
-Summarize the next deliverable and material uncertainty briefly. Existing
-implementation approval remains valid. Resolve routine implementation choices
-from approved intent and code; ask only for missing product decisions,
-conflicting requirements, or actions needing new authority.
+No simultaneous writers to either file. The root may bootstrap/recover `status.md`
+when no assignment lead is active, then transfers ownership explicitly. Existing
+history need not be rewritten. Create missing tracking files for implementation,
+not when merely discussing or editing this skill.
 
-## 2. Define a small execution slice
+On resume/compaction, the root reads its supervision record and current status;
+the assignment lead reads `status.md`. Reconcile with newer user instructions and
+current source/evidence relevant to the active work. Tracking never overrides
+the user or governing requirements. Follow historical links for a concrete gap,
+not to reload the whole narrative or rerun accepted gates by default.
 
-Treat large plan steps as milestones, not necessarily single work assignments.
-Subdivide them into coherent, testable slices in progress tracking without
-changing the approved requirements or release gates. A foundation slice may be
-internal, but its contract and verification must be concrete.
+Never redo a completed side request or reopen a settled decision merely because
+it appears in older history. Reopen only for new instructions or concrete evidence
+of invalidity and record why. Each owner updates its checkpoint at meaningful
+state changes and before planned pauses/handoffs, not only at compaction.
 
-Before coding each slice, keep one compact brief in `status.md`:
+## 3. Dispatch and decompose one bounded assignment
 
-- **Outcome:** observable behavior and applicable requirement IDs.
-- **Scope:** owned files/components, dependencies, and excluded work.
-- **Contract:** inputs, outputs, errors, side effects, and any shared seam.
-- **Evidence:** relevant existing tests, missing scenarios, and verification.
+The root selects one approved milestone or explicit outcome, not the whole
+remaining specification by default. Its brief states the outcome/requirements,
+accepted dependencies, bounded scope, exclusions, acceptance conditions, and stop
+boundary. Send the assignment lead the spec/skill paths and focused context.
+The root does not perform detailed decomposition or require routine approval of it.
 
-For high-risk work (authorization, provider/payment effects, destructive data
-changes, migrations, concurrency, or crash recovery), the implementer and
-independent reviewer agree on a few decisive scenarios before production work.
-Each gives a trigger, expected outcome, and observable evidence across the
-changed request/recovery path. Cover relevant identity, retry, stale-result,
-and durable-state transitions; do not build an exhaustive matrix or invent
-internal APIs. Record the agreed scenarios in the same brief. This is one
-upfront contract check, not a separate test-author team or per-test gate.
+The assignment lead inspects actual code and dependencies, then keeps the
+assignment intact or divides it into coherent, verifiable slices in `status.md`.
+A numbered milestone is not automatically one worker assignment. Split independent
+outcomes; keep coupled transaction/contract changes together. Do not divide solely
+by file count or architectural layer. An internal foundation must demonstrate a
+necessary contract, not just scaffolding, and name its consuming integration.
+Decomposition must not expand scope, skip release gates, or start the next milestone.
 
-Settle shared interfaces before parallel writers depend on them. Include known
-API consumers, tests, fixtures, and documentation in the impact check. Keep
-normative behavior in the spec and reference it rather than copying passages.
-If the same defect recurs, inspect the full affected path and revise the
-scenario or diagnosis immediately; do not repeat the same patch strategy.
+Keep one compact brief for each active slice:
 
-## 3. Ownership and delegation
+- Observable outcome and applicable requirement IDs.
+- Owned files/components, dependencies, exclusions, and shared resources.
+- Inputs/outputs/errors, side effects, and relevant contracts.
+- Existing evidence, missing scenarios, next concrete artifact, verification,
+  and any remaining integration dependency.
 
-Assign one implementer the complete slice: implementation plan, focused
-regression, implementation, relevant verification, affected documentation, and a
-consolidated handoff.
-Within the agreed scope, the worker owns that cycle without separate lead
-permission for each failing test, production edit, or test run. Complete the
-upfront scenario check for high-risk work; thereafter interrupt only for a
-material ambiguity, ownership/resource conflict, a concrete stall under section 4,
-or action needing authority.
+Assign a complete autonomous cycle: plan, regression, implementation, affected
+documentation, relevant verification, and consolidated handoff. Do not require
+manager permission for each test, RED result, code edit, or verification run.
+Check shared fixtures/contracts, build output, databases, ports, and servers;
+serialize conflicting operations without repeatedly transferring test slots.
 
-Default to one implementer for tightly coupled backend work plus one independent
-reviewer when needed. Parallelize only when both file ownership and execution
-resources are independent: check shared fixtures/contracts, build output,
-databases, ports, and servers. If assignments would require repeated test-slot
-handoffs, serialize the complete work cycles instead. Do not create extra
-worktrees/databases merely to fill agent slots; use isolation only when its
-benefit justifies setup. Read-only review may overlap genuinely independent work.
+Spawn assignment lead and reviewer with `agent_type: "default"`,
+`model: "gpt-6-astra"`, `reasoning_effort: "medium"`, `fork_turns: "none"`.
+Spawn Luna with `agent_type: "luna_worker"`, `fork_turns: "none"`; its model and
+effort are fixed. Spawn the escalation author as `default`, `gpt-6-astra`, `high`,
+with `fork_turns: "none"`. These assignments do not change the root's settings.
+If roles, capacity, or delegation are unavailable, report the limitation and
+obtain a fallback choice before changing this model/role structure. Managers do
+not silently take over coding. Preserve user-provided model overrides.
 
-Use these assignments unless the user explicitly overrides them:
+Give each agent its role, owned scope, governing paths, and relevant workflow
+rules explicitly. Assignment leads read this skill; worker briefs include planning,
+waiting, attempt accounting, and stop-on-pause rules. Do not assume no-history
+workers inherited instructions. Use native agent communication for the team and
+valid returned agent identifiers; do not create separate user-owned tasks for
+internal subtasks. Tell agents they share a workspace and must preserve others'
+edits. The assignment lead resolves decisions; workers/reviewer may discuss an
+agreed contract directly without the root relaying messages.
 
-| Task type | Agent/model | Reasoning |
-|---|---|---|
-| Initial implementation and one corrective attempt | `luna_worker` / `gpt-5.6-luna` | `max` (fixed by role) |
-| Escalated implementation after two unsuccessful Luna attempts | `default` / `gpt-6-astra` | `high` |
-| Narrow investigation or routine checks | `luna_worker` / `gpt-5.6-luna` | `max` (fixed by role) |
-| Independent code or pre-code scenario review | `default` / `gpt-6-astra` | `medium` |
-| Lead diagnosis, coordination, documentation, and tracking; no code edits | Current lead model | Current configured effort |
+Reuse an implementer during active corrections. At an accepted slice boundary,
+consider fresh worker context if the next slice is materially different and old
+context is dominated by completed work. Transfer only relevant contracts/evidence
+and preserve unresolved behavior counts; do not rotate on a fixed schedule.
 
-Spawn Luna with `agent_type: "luna_worker"` and `fork_turns: "none"`; its model
-and effort are fixed. Spawn the escalated implementer with `agent_type:
-"default"`, `model: "gpt-6-astra"`, `reasoning_effort: "high"`, and `fork_turns:
-"none"`. Use the same explicit settings with `reasoning_effort: "medium"` for
-review. Keep the reviewer distinct from both authors; a reviewer must not become
-the escalation author while remaining responsible for independent acceptance.
-These assignments do not change the lead's model or effort.
+## 4. Plan the mechanism and prove the critical path
 
-Escalation under section 5 is already authorized; do not ask again. If a required
-role/model or delegation is unavailable, report the limitation and obtain a
-fallback choice before substitution. Continue unaffected read-only/coordination
-work; the lead must not silently take over coding.
+### Plan before editing
 
-Give workers scoped briefs, relevant paths/requirements, commands, decisions,
-and ownership boundaries. Explicitly include section 4's plan-before-code rule in
-every Luna coding assignment and corrective follow-up; do not assume a worker
-without inherited history has read this skill. Default to no history fork;
-include the smallest history window only when specific conversational evidence
-is necessary. Tell
-workers they share the workspace, must preserve others' edits, and must not
-expand scope or delegate further without coordination. Related seam discussions
-can happen directly; the lead resolves decisions rather than forwarding every
-message. Transfer ownership explicitly before another implementer edits it.
+For every Luna coding assignment, including corrections, inspect relevant source,
+tests, and requirements, then publish a concrete plan to the assignment lead
+before editing code/tests/migrations/configuration. Read-only investigation and
+baseline verification may come first. Private reasoning alone is not the plan.
+A few grounded bullets suffice for a small change. Cover approach and affected
+files/classes/functions, reused helpers, change order, critical tests, and material
+uncertainties. The escalation author likewise states its revised approach.
 
-Reuse the same implementer for corrections to its active slice. At an accepted
-slice boundary, consider a fresh worker if the next assignment is materially
-different and accumulated context is dominated by completed work. Transfer only
-the current brief, relevant contracts/source paths, decisions, and evidence
-references; use `fork_turns: "none"`. Record the new owner in `status.md`, preserving
-any unresolved findings and attempt/escalation history. A context refresh does
-not authorize a model change or reset the count for unresolved work. Do not
-rotate agents on a fixed schedule or during an active correction merely to
-shrink context; avoid repeating discovery or accepted verification.
+For stateful/asynchronous/concurrent work, explain the actual mechanism:
+operation identity and durable target association; facts surviving restart,
+expiry, or deletion; how later work finds and authorizes the operation; what
+commits together; and rollback, pending, replay, and late-result behavior. Name
+existing fields/queries/boundaries or the necessary new mechanism. "Handle
+recovery" is insufficient. Do not require this analysis for unrelated simple edits.
 
-The worker reports changed behavior/files, verification, and unresolved concerns
-in one handoff. Do not create agents just to update tracking or relay commands.
-The lead can inspect, diagnose, validate findings, and edit prose documentation;
-all implementation and test corrections remain with the assigned implementer.
+The assignment lead checks scope, dependencies, and feasibility without duplicating
+technical review. For high-risk work (authorization, provider/payment effects,
+destructive changes, migrations, concurrency, recovery), the independent Astra
+Medium reviewer traces a few decisive scenarios through the proposed mechanism.
+Identify concrete missing facts/lookups/authority/atomic boundaries. Combine
+feedback into one pre-code exchange; resolve correctness blockers before production
+changes. No extra review team, document, or per-test approval stage. Ordinary work
+proceeds after plan publication without waiting for an acknowledgment.
 
-## 4. Implement with meaningful TDD
+Store the current plan summary/reference in `status.md`. Before corrections,
+update only affected parts and explain the failed approach. Reuse a valid plan
+on resume; revise it when evidence changes the mechanism. A material high-risk
+mechanism change returns to the same reviewer. Do not duplicate the spec, create
+a plan file for every small fix, or reset attempts by replanning.
 
-### Luna plans before editing code
+### Implement and verify autonomously
 
-For every coding assignment, including a corrective attempt, Luna first inspects
-the relevant source, tests, and governing requirements, then writes a concise
-implementation plan before editing any code, tests, migrations, or configuration.
-Read-only investigation and baseline verification may precede the plan. Publish
-the plan in a worker message visible to the lead; private reasoning alone does
-not satisfy this step. Keep it proportional: a few concrete bullets suffice for
-a small fix. Cover:
+For new behavior/bug fixes, demonstrate a meaningful focused failure, implement,
+and verify. Existing tests may supply the RED case. Compilation/setup failures
+alone do not prove the intended behavior fails. Test observable contracts rather
+than invented signatures, incidental structure, or redundant inventories.
 
-- the proposed approach and affected files/classes/functions, grounded in the
-  actual code, including existing helpers to reuse;
-- the order of changes and relevant contracts, state transitions, ownership or
-  transaction boundaries, and failure/rollback behavior;
-- the regression scenarios and verification that will demonstrate the outcome;
-- any material uncertainty or dependency that must be resolved before editing.
+For risky integration, prove the critical path early through its real application/
+persistence boundary before expanding surrounding work: e.g. completion plus
+replay, delayed authority, or rollback after a late failure. Compilation and
+command-shape tests cannot substitute where transaction/persistence behavior is
+the risk. Reuse fixtures and accepted coverage. The worker continues autonomously
+after this proof; it is not a manager approval gate.
 
-For high-risk work, include this technical approach in section 2's existing
-scenario review with Astra Medium before production changes; do not add a
-separate review team or approval stage. For ordinary work, publish the plan and
-continue autonomously without waiting for lead/user approval. Escalate material
-ambiguity through the existing rules.
+Correct faulty tests against governing requirements and include the reason in
+review. Never weaken a valid assertion or change correct behavior to satisfy an
+invented contract. Avoid tests merely for wording or low-impact formatting while
+preserving repository-required coverage and checks.
 
-Before a correction, update only the affected parts of the plan and explain
-why the previous approach failed. On resume, reuse a still-valid plan; revise it
-before edits if new evidence changes the approach. Keep the current plan summary
-or reference in `status.md` via the lead. Do not duplicate the full specification
-or create a separate planning document for every small change. Planning does
-not reset attempts or postpone section 4's stall intervention indefinitely.
+### Detect stalls within the assignment
 
-### Execute and verify
+A worker surfaces repeated investigation without new evidence, ineffective fixes,
+or inability to produce its next concrete artifact. The assignment lead also
+watches for planning/delegation/review loops producing no concrete result. Pause
+the unproductive pattern and give one diagnostic handoff: failing outcome, what
+was tried/ruled out, obstacle, and proposed change. Consolidate ownership, clarify
+the mechanism, or narrow the slice before continuing. Status-only redispatch is
+not a changed approach. Escalate obstacles beyond the mandate to the root.
 
-The implementer normally owns both tests and production code for the slice.
-For new behavior and bug fixes, add or adapt a focused test first, demonstrate
-the relevant failure, implement, then verify. Existing tests may already provide
-the needed red case. A compile/import error alone does not prove the intended
-behavior fails.
+Elapsed time alone, expected TDD failures, and legitimately long tests are not
+implementation stalls. Do not add per-test gates or perpetual progress meetings.
+An explicitly unable candidate counts as unsuccessful under section 5; a diagnostic
+pause or environment-only failure alone does not. Do not indefinitely label an
+exhausted candidate "in progress." Root supervision is separate under section 7.
 
-Use section 2's upfront scenario check for high-risk work. The implementer then
-runs the test/code/verification cycle autonomously; do not require root approval
-of each RED result. Include the meaningful before/after evidence in the completed
-handoff. Review ordinary tests with the implemented slice.
+## 5. Stable independent review and implementation escalation
 
-Test observable contracts and meaningful invariants. Avoid invented method
-signatures, incidental component structure, redundant coverage, or exact file/
-key inventories unless those details are explicit contracts. Prefer existing
-fixtures and test homes where appropriate. Do not add tests merely for wording,
-formatting, or other reversible low-impact changes; use suitable static or
-render checks instead. Preserve repository-mandated coverage and checks.
+Require independent Astra Medium review for substantive slices; include mechanical
+corrections in the existing review. Judge risk by behavior, not diff size. Inspect
+complete affected request/recovery paths against the requirements. Each blocker
+must state a concrete trigger, violated requirement/risk, code/test location,
+observable impact, and evidence that would demonstrate resolution. Preferences,
+unsupported assumptions, and speculative redesigns do not block. Consolidate
+findings; report urgent blockers early only when they prevent wasted/unsafe work.
 
-When a test is wrong, validate it against the governing requirement and have
-the current implementer correct it. Record the reason and include the change in
-review. Do not weaken an assertion to hide a real defect, and do not change
-correct product behavior just to satisfy an over-specified test.
-
-### Intervene when a candidate stalls
-
-The worker identifies the next concrete artifact within its existing brief:
-a reproduced failure, implemented behavior, or verified candidate. Intervene
-when it repeatedly revisits the same uncertainty without new evidence, repeats
-an ineffective fix, or cannot produce that artifact. The worker should surface
-this itself; the lead may request the same diagnosis when the pattern is visible.
-Elapsed time alone, expected TDD failures, or waiting for a legitimately long
-command do not establish an implementation stall.
-
-Pause the unproductive loop and return one concise diagnostic handoff: the
-behavior still failing, what was tried and ruled out, the specific obstacle,
-and the proposed change of approach. The lead and worker use it to resolve the
-obstacle or revise the approach before continuing; a status-only redispatch is
-insufficient. Record only the resulting diagnosis/next action in `status.md`.
-Do not add recurring progress meetings, per-test gates, or arbitrary time/token
-limits. Useful new evidence and meaningful implementation progress justify
-continuing the autonomous cycle.
-
-A candidate explicitly unable to meet its contract counts as an unsuccessful
-attempt under section 5, even if no reviewable patch was submitted. A diagnostic
-pause alone does not consume an attempt, and environment-only failures retain
-their existing exception. Do not keep an exhausted candidate indefinitely open
-to avoid counting failure. After the first unsuccessful Luna attempt, Luna still
-gets its corrective attempt; escalate only after the second under the existing
-policy. The lead must not take over code changes.
-
-## 5. Review findings, not preferences
-
-Require independent Astra Medium review for substantive implemented slices;
-include small mechanical corrections in the existing slice review. Judge risk
-by behavior, not diff size. Ask the reviewer to inspect implementation and tests
-against the brief and governing requirements. Passing tests alone are not proof of a correct slice.
-Review complete user/request/recovery paths where changes cross boundaries.
-
-Each blocking finding must give:
-
-- a concrete trigger or scenario;
-- a violated requirement or demonstrable correctness risk;
-- the relevant code/test location and observable impact;
-- the missing evidence or regression that would demonstrate resolution.
-
-Separate blocking findings from optional suggestions, unsupported assumptions,
-and out-of-scope observations. Naming preferences, speculative edge cases, and
-alternative architectures do not block without a contractual or practical
-impact. Return one consolidated review; report an urgent finding early only
-when it prevents wasted work or unsafe changes.
-
-The lead validates findings, records their disposition, and assigns cohesive
-fixes. Re-review the changed paths and unresolved findings; expand the review
-only when the fix creates a concrete new risk. Preserve a compact finding list
-so resolved decisions do not need to be rediscovered.
+At submission, identify scope, tested source state, commands/results, and concerns.
+The author stops editing the reviewed scope until consolidated feedback or an
+explicit withdrawal. Use a lightweight revision marker/manifest appropriate to
+the workspace, not mandatory whole-repository hashing for every handoff. Disclose
+late changes and renew affected verification. The assignment lead validates and
+assigns cohesive fixes; re-review changed paths/unresolved findings, expanding
+only for concrete risks introduced by the fix. The root does not repeat review.
 
 ### Two Luna attempts, then Astra High
 
-An attempt is one end-to-end implementation candidate submitted for acceptance,
-or explicitly reported unable to meet the agreed behavior. The initial candidate
-is attempt 1; a candidate correcting its validated blockers is attempt 2. Routine
-local test iterations within a cycle, expected TDD failures, and environment-only
-failures do not each consume an attempt. Do not claim a third candidate is still
-part of an earlier attempt. Consolidate findings from the same review into one
-correction rather than counting each finding separately.
+An attempt is an implementation candidate submitted for acceptance or explicitly
+unable to meet the agreed behavior. Initial candidate is attempt 1; corrective
+candidate is attempt 2. Local test iterations, expected RED, plan feedback, and
+environment-only failures do not each consume an attempt. Count failure when
+validated review/verification leaves a correctness requirement unresolved or the
+worker cannot complete it. Consolidate one review's findings into one correction.
 
-Count an attempt unsuccessful when lead-validated review or verification exposes
-an unresolved correctness requirement, or the worker cannot complete it. Record
-the outcome/count in `status.md`. After attempt 1 fails, send Luna one cohesive correction
-brief. After attempt 2 fails, stop Luna's edits and transfer the remaining issue
-and affected files to a GPT-6 Astra High implementer without another permission
-request. Preserve the patch, regressions, useful evidence, and independent Astra
-Medium reviewer. Renaming the slice, resuming, compaction, or replacing a Luna
-worker must not reset the count for the same unresolved work. A genuinely new
-accepted-scope slice starts its own count.
+The assignment lead records counts against the same unresolved behavior in
+`status.md`, with owner and finding references. After failure 1, Luna gets one
+cohesive correction. After failure 2, stop Luna's edits and transfer the remaining
+behavior/files to Astra High automatically, preserving patch, tests, evidence,
+and the independent Astra Medium reviewer. No renewed user permission is needed.
+The reviewer must not become the correction author and still accept its own work.
 
-Before the escalated patch, the lead inspects the complete failing path and
-records the cause supported by evidence (or the specific uncertainty): contract
-ambiguity, faulty test, incomplete fix, or oversized scope. The Astra implementer
-uses this diagnosis and the consolidated scenarios to change the approach,
-clarify the contract within existing authority, or subdivide the remaining work.
-A third identical dispatch is not a diagnostic checkpoint. The lead remains
-read-only for code, including when it already knows the likely fix.
+Renaming, splitting, resuming, or changing workers/assignment leads must not reset
+counts for unresolved behavior. Genuinely independent new behavior starts its
+own count. Before escalation, the assignment lead diagnoses the full failing path:
+contract ambiguity, faulty test, incomplete mechanism, or oversized scope. Astra
+uses that diagnosis and decisive scenarios to change the approach. Neither manager
+makes the fix itself. If Astra still fails, retain its ownership and diagnose
+before further correction; do not cycle back to fresh Luna attempts. Independent
+review and required verification are never waived by escalation.
 
-Escalation does not waive findings or verification. If Astra's attempt is still
-unsuccessful, retain its ownership and diagnose the remaining blocker before
-further work; do not cycle back to fresh Luna attempts or blindly repeat reviews.
-Ask the user only for a material unresolved decision or unavailable authority.
+## 6. Verification and waiting discipline
 
-## 6. Verification and cost control
+During correction, run focused and neighboring checks. At acceptance, satisfy
+repository/plan-required tests, compilation/type checks, builds, integration/E2E,
+docs, and derived-artifact updates. Record command, outcome, and tested code state.
+Relevant subsequent source/fixture/config/schema edits invalidate corresponding
+evidence. Reuse valid results; do not repeat broad suites merely for handoffs.
+Synchronize required graph/derived artifacts at the prescribed stable boundary,
+not repeatedly per worker. Keep verbose output in logs with concise evidence links.
 
-- During iteration, run the tests that exercise the changed behavior and nearby
-  contracts. At the slice gate, run repository/plan-required tests, compile/type
-  checks, builds, and relevant integration/E2E checks. Respect stricter project
-  requirements; optimization must not silently skip required verification.
-- Record the command, result, and code state tested (commit plus working-tree
-  state, or a clear local revision marker). A later relevant edit invalidates
-  that evidence, including changes to shared fixtures, configuration, or schema.
-  Reuse valid results; do not repeat broad suites simply because
-  an agent finished or another reviewer replied.
-- Serialize commands sharing build output, databases, ports, or other mutable
-  test resources. Independent checks may run in parallel. Keep verbose output
-  in logs and report summaries plus actionable failure excerpts.
-- Prefer completion notifications and the longest suitable event-driven wait
-  allowed by runtime/communication limits. Do useful independent work while a
-  worker runs. A timeout alone needs no worker message or renewed dispatch.
-  Contact a worker to resolve a decision, change scope/dependencies, or diagnose
-  a concrete stall; do not request status already available from tools.
-  Keep required user updates concise, without initiating worker exchanges just
-  to produce them. Do not repeatedly poll unchanged status.
-- Apply waiting rules to every agent, including implementers and reviewers,
-  and to long-running commands as well as agent coordination. For unattended
-  tests/builds, use a substantial initial command wait and subsequent process
-  waits, normally 30–60 seconds within tool/runtime/communication limits. Reserve
-  short polling for interactive input or a concrete expectation of an immediate
-  result. When an outer tool yields, resume its wait handle rather than launch
-  another command to check the same process. Do not replace waiting with repeated
-  log reads or process-status checks. Inspect output to diagnose a specific
-  failure/stall; otherwise report completion and actionable results together.
-  Required user updates must not cause workers to poll more frequently. Pass
-  these rules in worker briefs instead of assuming workers inherit this skill.
-- At slice completion and the escalation checkpoint, record completed behavior,
-  unresolved findings, attempt outcomes, and usage/time when available. Keep
-  this concise. Distinguish cached input, uncached input, and output; do not
-  invent token totals or convert them to cost without evidence.
-- If handoffs or repeated reviews are producing no completed behavior, reduce
-  the team/context or consolidate the task before continuing. Respect explicit
-  user budgets; never consume a reset or change paid settings without authority.
+All roles prefer completion notifications and substantial command waits, normally
+30–60 seconds within tool/runtime/communication limits. Short process polling is
+for interactive input or an expected immediate result. Resume yielded handles;
+do not substitute repeated log/process-status reads for waiting. Inspect output
+for a concrete failure/stall. A timeout alone needs no worker message or dispatch.
+Required user updates must not make workers poll more often. The root remains
+available for supervision without starting unrelated work. These live waits do
+not create recurring automations or guarantee wakeups while the task is inactive.
 
-## 7. Complete, record, and continue
+At acceptance/escalation, record outcomes, attempt counts, and readily available
+usage/time concisely. Distinguish cached input, uncached input, and output; do not
+invent usage or billing estimates or poll usage continuously.
 
-A slice is complete when its agreed behavior is implemented, substantive review
-findings are resolved, required verification passes, and affected documentation
-matches the code. Preserve single-writer, migration, and deployment gates from
-the plan even when intermediate slices are green.
+## 7. Root supervision: 60 minutes, then every 30 minutes
 
-Update `progress.md` with exact milestone/slice completion, durable decisions,
-and concise verification evidence. Refresh `status.md` with only the current
-handoff and next action, linking to that evidence; remove resolved active entries.
-At final completion, leave a short completed checkpoint with any limitations.
-Do not equate
-test counts or files changed with product completion. Run repository-required
-derived-artifact updates at their prescribed boundary rather than repeatedly
-per worker. Do not commit, publish, or deploy beyond existing authorization.
+At dispatch, the root reads the actual clock and records in a small supervision
+block in `progress.md`: assignment/agent ID, start time, next check (start +60m),
+last check/assessment, and a compact per-blocker record of identity, progress
+evidence, and consecutive-stall count. Use timestamps with timezone. Preserve this record across
+continuation/compaction; changing a worker, slice, or assignment-lead context for
+the same assignment does not restart its timer or erase a stall.
 
-Continue through the remaining approved work. When blocked, distinguish an
-environment/tool limitation from a code failure, preserve a useful checkpoint,
-and report the smallest missing input or authority. At final delivery, state
-the implemented outcomes, verification, and any remaining limitations without
-claiming unfinished milestones are complete.
+While the assignment lead runs, the root waits within runtime limits, handles
+user messages and exceptions, and checks the clock when due. It need not inspect
+agents or send status requests at every short tool-wait return. If the assignment
+finishes before a scheduled check, handle the handoff instead. If the root resumes
+overdue, perform one real check promptly; do not fabricate missed assessments or
+count two catch-up checks as consecutive observations. After each actual check,
+schedule the next for +30m. Steering does not reset that schedule. Off-schedule
+user updates or blocker discussions do not advance/reset scheduled observation
+counts or change deadlines; retain their evidence for the next scheduled assessment.
+They may still resolve a material decision or satisfy a user-directed stop.
+
+At each check, read `status.md` and recent evidence to assess concrete progress,
+advancing implementation/verification, repeated failures or coordination loops,
+and scope compliance. Inspect only what resolves uncertainty; do not duplicate
+technical review or demand lengthy reports already covered by evidence.
+
+- Meaningful progress: let work continue and clear any resolved/advancing stall.
+- Recoverable issue: give one focused steering message; let work continue.
+- Human decision needed: notify the user in plain language and continue unaffected
+  authorized work where possible. Do not guess the decision or do dependent work.
+- Same blocker with no meaningful progress at two consecutive scheduled checks:
+  pause the assignment and escalate to the user, even if no implementation
+  candidate has been submitted. This check count is separate from Luna attempts.
+
+At the first scheduled check, poor progress alone must not stop the assignment
+lead. For example, stuck on A at 60m means steer/continue; still stuck on A without
+meaningful progress at 90m means pause/escalate. Unfinished work or a long test
+alone is not a stall. Track the underlying unresolved behavior, not its label:
+renaming it, switching authors, or promising a fix is not progress. New evidence
+counts only if it materially advances diagnosis/resolution of that blocker;
+unrelated accomplishments cannot clear it. Multiple blockers retain their own
+consecutive observations so a persistent one is not hidden by a new one.
+
+For a two-check stall, request a coordinated pause through the assignment lead:
+stop starting edits, attempts, and verification; notify the implementer/reviewer;
+preserve patch/evidence/counts and checkpoint active processes. Allow running
+operations to reach a safe stopping point where needed; do not kill them blindly
+or treat this as permission for indefinite new work. The owning worker and
+assignment lead monitor existing operations through safe stop and record results;
+the root recovers that responsibility only after exclusive ownership transfer.
+Confirm child acknowledgment
+or interrupt an unresponsive child when safe. Do not start another assignment or
+resume automatically; wait for the user's direction.
+
+Send a concise, self-contained escalation:
+
+> Paused: [plain-language issue].
+> Progress: [completed outcome].
+> Blocker: [same obstacle observed at both check times].
+> Tried: [steering/fixes and their result].
+> Recommendation: [next action and specific decision needed].
+
+Record pause state in the root supervision block; assignment lead checkpoints
+`status.md`. If it is unresponsive, the root recovers the file only after exclusive
+ownership is established. On explicit user-authorized resume, preserve all work
+and implementation failures, record the changed direction and a fresh supervision
+baseline with active consecutive-stall counts at zero, and schedule the next
+check in 30m. Retain prior assessments as history; this reset never clears Luna
+failures or occurs without user direction. Do not invent runtime support for
+unattended timers; if supervision cannot continue, disclose it and checkpoint.
+
+## 8. Accept, hand off, and end the assignment
+
+A slice is accepted when behavior works, substantive findings are resolved,
+required verification passes, and docs match code. Assignment lead advances
+sequential slices and completes assignment-level integration/release gates before
+claiming the assignment accepted. Test counts/files changed alone are not completion.
+
+The assignment lead returns one accepted handoff: outcome and bounded scope,
+tested source state, independent review disposition, verification/limitations,
+relevant later dependencies, and resource cleanup. It updates `status.md` to a
+completed checkpoint and stops its workers and its own work. The root checks
+scope, required evidence, independent acceptance, and the user stop boundary;
+it does not re-review patches or rerun valid gates. It records acceptance in
+`progress.md` and clears the active supervision record while retaining any
+material decisions. A blocker handoff must never be recorded as acceptance.
+
+For another authorized assignment, create a fresh Astra Medium assignment lead
+with `fork_turns: "none"` and focused persistent context. Do not reuse the finished
+manager or its workers for unrelated assignments. This is a fresh working context,
+not deletion of stored history. The same interrupted assignment may resume with
+the same manager or a replacement after ownership transfer, preserving failures,
+decisions, and supervision history/deadlines, except for the explicit authorized
+resume baseline in section 7. A root-supervised pause requires user direction.
+
+When the user's stopping boundary is reached, report accepted outcomes, evidence,
+and limitations, leave a completed checkpoint, and stop. Do not begin later steps
+or expand scope without authorization.
