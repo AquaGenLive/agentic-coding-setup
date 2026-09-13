@@ -24,14 +24,14 @@ One approved assignment at a time. Deliver behavior, evidence, and independent a
 
 - Table configurations list `agent_type`, model, effort. All subagents: `fork_turns: "none"`; default agents use the table's `model` and `reasoning_effort`. Preserve explicit user overrides; do not change root settings. If roles/capacity/delegation are unavailable, report and obtain a fallback choice before substitution.
 - Root spawns one active Lead only. Lead spawns at most one active implementer and one independent reviewer; slices run sequentially. No further delegation by workers/reviewer, nested leads, or extra worktrees/databases merely to fill slots.
-- Root and Lead may inspect source/evidence and edit prose/tracking; **no application/test/migration/build/runtime/script edits**, including small fixes or code conflict resolution. Explicit skill editing is exempt. Reviewer is read-only and never accepts its own implementation.
+- Root and Lead may inspect source/evidence within their responsibilities below and edit prose/tracking; **no application/test/migration/build/runtime/script edits**, including small fixes or code conflict resolution. Explicit skill editing is exempt. Reviewer is read-only and never accepts its own implementation.
 - Replacement author takes exclusive ownership after the former author stops editing; never overlap Luna/Astra writers.
 - While Lead runs, Root handles communication, supervision (§7), and decisions beyond Lead's mandate. No other assignment, parallel investigation, duplicate routine reviews, worker-message relaying, or test supervision. Handle scope changes/real blockers immediately when needed.
 - Lead resolves routine technical decisions and validated fixes. Escalate material requirement/scope/authority conflicts to Root, which uses existing approval or asks the user. No commit, publish, deploy, usage reset, or paid-setting change beyond existing authority.
 
 ## 2. Resume and tracking
 
-Resolve the spec directory; read applicable repo instructions, governing spec/plan sections, and relevant build/test scripts. Ask only for unresolved target/material requirements. Preserve exact step names, dependencies, existing edits, accepted decisions, and valid verification.
+Resolve the spec directory and read applicable repo instructions. Root reads governing scope/acceptance/stop requirements; Lead owns detailed spec, source, and build/test investigation. Ask only for unresolved target/material requirements. Preserve exact step names, dependencies, existing edits, accepted decisions, and valid verification.
 
 | File | Exclusive owner | Contents |
 |---|---|---|
@@ -40,7 +40,7 @@ Resolve the spec directory; read applicable repo instructions, governing spec/pl
 
 Root may bootstrap/recover `status.md` only without an active owner, then explicitly transfer ownership. No simultaneous writers. Create missing tracking files for implementation, not skill discussion/editing; do not rewrite existing history unnecessarily.
 
-On resume/compaction: Root reads supervision + status; Lead reads status. Reconcile with newer user instructions and relevant current source/evidence; tracking never overrides requirements. Follow history only for a concrete gap, not to reload everything or rerun accepted gates. Reopen settled decisions/completed side requests only for new instructions or evidence of invalidity; record why. Owners checkpoint meaningful changes and before planned pause/handoff.
+On resume/compaction: Root reads supervision + status; Lead reads status. Reconcile with newer user instructions; Lead verifies relevant current source/evidence. Root opens underlying artifacts only for a concrete scope, supervision, or acceptance gap. Tracking never overrides requirements. Follow history only for a concrete gap, not to reload everything or rerun accepted gates. Reopen settled decisions/completed side requests only for new instructions or evidence of invalidity; record why. Owners checkpoint meaningful changes and before planned pause/handoff.
 
 ## 3. Dispatch and slicing
 
@@ -57,6 +57,8 @@ Assign the full cycle:
 Outside proof/candidate checkpoints, workers act autonomously; no permission per edit/test/RED/run. Serialize conflicting fixtures, build outputs, databases, ports, and servers without repeated test-slot transfers.
 
 Every brief states role, ownership, governing paths, shared workspace/preserve-others rule, and applicable workflow. Lead reads this skill. Workers receive plan/proof, repair-guidance use, review-before-broad-gates, attempt, pause, and §6 execution-stall rules (notice, five-minute check, one recovery) explicitly. Reviewer briefs include §5's repair guidance and finite-request/return lifecycle. **Every Lead/worker/reviewer/escalation brief includes §6's waiting rule verbatim**; paths alone do not transmit rules to fresh contexts.
+
+**Root–Lead reporting:** Lead sends Root accepted milestones/assignment completion, blockers or decisions needing Root, and a concise assessment when scheduled supervision needs one (§7). Report only the change: outcome, blocker/decision if any, next action, evidence link. Keep routine plans, proof exchanges, findings, retries, test results, and execution tracking within Lead/worker/reviewer and `status.md`; do not copy their discussions to Root. Root uses these reports for user communication/progress, without acknowledgment-only replies, re-summarizing technical feedback, or requesting a second report of the same state. Required user updates use known state, not extra team inspections.
 
 Use native agent communication and returned IDs, not separate user-owned tasks. Workers/reviewer may discuss agreed contracts directly; Lead resolves decisions. Reuse workers during corrections. Consider fresh worker context at an accepted, materially different slice boundary when old context is dominated by completed work; transfer relevant contracts/evidence and preserve counts. No scheduled rotation.
 
@@ -138,9 +140,9 @@ At acceptance/escalation, record outcomes, attempts, readily available time/usag
 
 At dispatch, read actual clock. Record in progress: assignment/agent ID, start + timezone, next check = start+60m, last assessment, per-blocker identity/evidence/consecutive-stall count. Preserve across compaction and worker/slice/Lead replacement; no timer/count reset for the same assignment.
 
-Wait within tool limits; handle user input/exceptions. No status requests each wait return. Completion before deadline → handoff. Overdue resume → one real check promptly, never fabricated missed checks or two catch-up observations. After each actual check, next = check+30m. Steering/off-schedule messages do not change deadlines or scheduled counts; retain useful evidence. Immediate decisions/user-directed stops remain allowed.
+Wait within tool limits; handle user input/exceptions. A wait timeout without new information → wait again; no status reads/requests, log inspection, or worker checks merely because the wait returned. Only a meaningful report, user request, scheduled check, or concrete exception triggers Root assessment. Completion before deadline → handoff. Overdue resume → one real check promptly, never fabricated missed checks or two catch-up observations. After each actual check, next = check+30m. Steering/off-schedule messages do not change deadlines or scheduled counts; retain useful evidence. Immediate decisions/user-directed stops remain allowed.
 
-At each check, read status/recent evidence: concrete implementation/verification progress, repeated failures/coordination loops, scope, waiting compliance. Investigate only uncertainty; no duplicate technical review or lengthy repeated reports.
+At each check, use current status and received Lead reports to assess concrete implementation/verification progress, repeated failures/coordination loops, scope, and waiting compliance. If evidence is insufficient, ask Lead one targeted question or inspect the specific linked artifact; do not routinely read child histories, raw logs, source, or repeat Lead's diagnosis. Record only the assessment delta and next check; no duplicate technical review or lengthy repeated reports.
 
 - Progress on a blocker → continue; clear its advancing/resolved stall count.
 - Recoverable issue / first stalled check → steer once, continue. Poor progress alone at 60m must not stop Lead.
@@ -159,7 +161,7 @@ Root records pause in progress; Lead checkpoints status. Recover ownership from 
 
 Acceptance = working behavior + resolved substantive findings + required gates + matching docs. Lead accepts slices sequentially and completes assignment-level integration/release gates. Test counts/file counts alone are insufficient; blocker handoff is never acceptance.
 
-Lead's consolidated handoff: outcome/scope, tested source, independent disposition, verification/limitations, later dependencies, cleanup. Complete status; stop workers and own work. Root checks scope/evidence/independent acceptance/stop boundary without re-review or valid-gate reruns, records acceptance in progress, clears active supervision, retains durable decisions.
+Lead's consolidated handoff: outcome/scope, tested source, independent disposition, verification/limitations, later dependencies, cleanup. Complete status; stop workers and own work. Root checks the handoff for scope, evidence completeness, independent acceptance, and stop boundary; open underlying artifacts only for a concrete inconsistency/gap. No repeated technical acceptance review or valid-gate reruns. Record acceptance in progress, clear active supervision, retain durable decisions.
 
 Next authorized assignment: fresh Astra Medium Lead with no history fork and focused persistent context; do not reuse finished managers/workers for unrelated work. Fresh context does not delete stored history. Same interrupted assignment may resume with its manager or a replacement after ownership transfer, preserving failures/decisions/supervision except the explicit §7 resume reset. A supervised pause still requires user direction.
 
