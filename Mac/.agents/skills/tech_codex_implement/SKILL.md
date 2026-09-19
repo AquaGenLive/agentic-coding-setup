@@ -19,7 +19,7 @@ One approved assignment at a time. Deliver behavior, evidence, and independent a
 | Root | Scope, overall progress, supervision, user decisions, stop boundary | Current model/effort |
 | Assignment lead (Lead) | Dependencies, slicing, coordination, findings, stalls, escalation, acceptance | `default`, `gpt-6-astra`, `medium` |
 | Implementer | Plan, tests, code, affected docs, verification | `luna_worker`, fixed `gpt-5.6-luna` / `max` |
-| Escalated implementer | Remaining work after two unsuccessful Luna candidates | `default`, `gpt-6-astra`, `high` |
+| Escalated implementer | Remaining work after the initial Luna candidate and four unsuccessful corrections | `default`, `gpt-6-astra`, `medium` |
 | Independent reviewer | High-risk mechanism/proof and substantive candidate review | `default`, `gpt-6-astra`, `medium` |
 
 - Table configurations list `agent_type`, model, effort. All subagents: `fork_turns: "none"`; default agents use the table's `model` and `reasoning_effort`. Preserve explicit user overrides; do not change root settings. If roles/capacity/delegation are unavailable, report and obtain a fallback choice before substitution.
@@ -54,13 +54,31 @@ Keep one Lead for the milestone, one active implementer, and the same independen
 
 **Focused handoffs (all roles):** Supply assigned outcome/requirement IDs with exact spec sections; owned components/files and shared resources; dependencies/exclusions; inputs/outputs/errors/effects and shared contracts; relevant evidence, missing scenarios, unresolved findings/repair guidance, next artifact, verification, and remaining integration. Link source documents with section/function/test locations; quote only essential constraints. Do not paste entire specs, project handbooks, conversations, or completed finding histories. Recipients read applicable instructions and referenced requirements; retrieve more source/context for concrete dependencies or uncertainties. Preserve required workflow rules below, acceptance criteria, attempt counts, and ownership/restoration obligations. No arbitrary context cap or separate handoff document. Corrections to the same agent carry changed scope/source, unresolved findings, new evidence, and plan delta; fresh replacements receive the complete relevant assignment state.
 
-Assign the full cycle with explicit boundaries:
+**Workflow map:** Read as text; no rendering step needed. Roles/models/effort: §1. This overview does not replace detailed rules; §4 governs proof, §5 candidate counting, §6 verification, and §7 supervision/pause at every stage.
 
-`each slice: plan → early proof if high-risk (§4) → implementation/docs → focused + affected-neighbor checks → candidate review → next dependent slice`
+```mermaid
+flowchart TD
+    S["Lead: size/split one behavior"] --> P["Worker plan; Lead checks size"]
+    P -->|Too broad| S
+    P -->|Fits| H{"High-risk proof needed?"}
+    H -->|Yes| E["Mechanism review → minimal proof → independent proof review; §4"]
+    E -->|Changes required: proof feedback| E
+    E -->|Proof accepted| I["Implementer: code/docs + focused and neighbor checks"]
+    H -->|No| I
+    I --> R{"Independent reviewer: candidate accepted?"}
+    R -->|Changes required| B{"Luna author AND four corrections exhausted?"}
+    B -->|Yes| T["Lead: exclusive transfer to escalated implementer"]
+    T --> F["Reviewer repair guidance + author plan delta"]
+    B -->|No: Luna budget remains OR already Astra| F
+    F --> I
+    R -->|Accepted| N{"More slices in milestone?"}
+    N -->|Yes| S
+    N -->|No| G["Integrated milestone checks + required broad gates"]
+    G -->|Defect: renew affected evidence/review; §5| B
+    G -->|Passed| A["Lead accepts milestone; Root checks handoff and stop boundary; §8"]
+```
 
-`integrated milestone: remaining integration checks → required broad gates → acceptance/handoff`
-
-Lead checks that review-cleared slices compose into the governing milestone outcome; their reviews do not replace integration acceptance. For a single-slice milestone these boundaries coincide. Repository/plan-required earlier gates still apply (§6).
+Luna candidate budget: initial submission + up to four corrections (five attempts total); explicit inability also follows §5. Early-proof feedback is separate, not automatically a candidate attempt. Astra retains correction ownership after escalation. Lead verifies that slices compose into the milestone; slice review is not final acceptance. For a single slice, the boundaries coincide. Preserve any repo/plan-required earlier gates.
 
 Outside proof/candidate checkpoints, workers act autonomously; no permission per edit/test/RED/run. Serialize conflicting fixtures, build outputs, databases, ports, and servers without repeated test-slot transfers.
 
@@ -122,9 +140,9 @@ Lead tracks each finding in status: `ID | required outcome | focused test/eviden
 - Submission includes scope, tested source marker, commands/results, concerns. Freeze reviewed scope until consolidated feedback or explicit withdrawal. Use a lightweight revision/manifest, not mandatory whole-repo hashing. Disclose later changes; renew affected evidence.
 - Return blockers as one cohesive correction. Re-review changes/unresolved findings; expand only for concrete risks introduced by fixes. If broad gates reveal a defect, correct it and renew affected review/verification. Root does not repeat review.
 
-**Two Luna attempts → Astra High:** An attempt is a submitted acceptance candidate or explicit inability to meet agreed behavior. Initial = 1, correction = 2. Validated unresolved requirements, including missing behavioral evidence at Lead's completeness check, make submission unsuccessful even before broad gates. Local iterations, expected RED, plan feedback, and environment-only failures do not each count. No uncounted “readiness checks,” double-counted rejection across gates, or withdrawal to erase known failure.
+**Initial Luna candidate + four correction rounds → Astra Medium:** Allow up to five candidate attempts for the same unresolved behavior: initial candidate = attempt 1; corrections 1–4 = attempts 2–5. Stop correcting as soon as the candidate is accepted. An attempt is a submitted acceptance candidate or explicit inability to meet agreed behavior. Validated unresolved requirements, including missing behavioral evidence at Lead's completeness check, make submission unsuccessful even before broad gates. Local iterations, expected RED, plan feedback, and environment-only failures do not each count. No uncounted “readiness checks,” double-counted rejection across gates, or withdrawal to erase known failure.
 
-Track counts against the same unresolved behavior. After failure 1: one consolidated Luna correction using reviewer repair guidance and worker plan delta; guidance adds no attempt or retry-counter reset. After failure 2: stop Luna edits; automatically transfer remaining behavior/files to Astra High with patch/tests/evidence/counts and the same independent reviewer. No renewed permission. Lead diagnoses contract ambiguity, faulty tests, incomplete mechanism, or oversized scope; Astra uses that diagnosis to change approach. Managers/reviewer never become fix authors.
+Track counts against the same unresolved behavior. After unsuccessful attempts 1–4, send one consolidated correction to the same Luna worker using reviewer repair guidance and worker plan delta; guidance adds no attempt or retry-counter reset. After unsuccessful attempt 5 (the fourth correction): stop Luna edits; automatically transfer remaining behavior/files to Astra Medium with patch/tests/evidence/counts and the same independent reviewer. No renewed permission. Lead diagnoses contract ambiguity, faulty tests, incomplete mechanism, or oversized scope; Astra uses that diagnosis to change approach. Managers/reviewer never become fix authors.
 
 Renaming/splitting/resuming/replacing agents cannot reset unresolved counts; genuinely independent behavior starts its own count. If Astra fails, retain ownership and diagnose before correcting; no return to fresh Luna attempts or waived review/gates.
 
