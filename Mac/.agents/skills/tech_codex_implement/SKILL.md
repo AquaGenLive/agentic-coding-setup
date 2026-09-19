@@ -58,7 +58,15 @@ Outside proof/candidate checkpoints, workers act autonomously; no permission per
 
 Every brief states role, ownership, governing paths, shared workspace/preserve-others rule, and applicable workflow. Lead reads this skill. Workers receive plan/proof, repair-guidance use, review-before-broad-gates, attempt, pause, communication route below, and §6 execution ownership/stall rules (notice, autonomous handle resumes, five-minute check, one recovery) explicitly. Reviewer briefs include §5's repair guidance and finite-request/return lifecycle. All briefs include §6's concise-output practice: retain verbose logs, return result/evidence links and relevant failure excerpts, retrieve further output for a concrete gap. **Every Lead/worker/reviewer/escalation brief includes §6's waiting rule verbatim**; paths alone do not transmit rules to fresh contexts.
 
-**Root–Lead reporting:** Lead sends Root accepted milestones/assignment completion, blockers or decisions needing Root, and a concise assessment when scheduled supervision needs one (§7). Report only the change: outcome, blocker/decision if any, next action, evidence link. Keep routine plans, proof exchanges, findings, retries, test results, and execution tracking within Lead/worker/reviewer and `status.md`; do not copy their discussions to Root. Root uses these reports for user communication/progress, without acknowledgment-only replies, re-summarizing technical feedback, or requesting a second report of the same state. Required user updates use known state, not extra team inspections.
+**Actionable notifications:**
+
+| Route | Notify for |
+|---|---|
+| Worker → Lead | Required plan/delta, review-ready proof/candidate, blocker/decision, required execution notice/initial outcome (§6), completed verification |
+| Lead → Root | Accepted milestone, assignment completion, blocker/decision needing Root, assessment needed for scheduled supervision (§7) |
+| Lead → reviewer | Ready review material (§5); material corrections during active review |
+
+Batch related findings/evidence into one handoff: change/outcome, blocker/decision if any, next action, evidence link. Do not delay urgent correctness/safety blockers, required pre-code plans, execution notices, or pause/ownership acknowledgments. No acknowledgment-only chatter, duplicate notifications, routine “starting/still running” messages, or repeated reports of unchanged state. Include these notification rules in recipient briefs. Keep routine plans, proof exchanges, findings, retries, test results, and execution tracking within Lead/worker/reviewer and `status.md`; do not relay their discussions to Root. Root uses these reports for progress/user communication without repeating technical feedback or requesting the same report again. Required user updates use known state, not extra team inspections.
 
 **Communication route:** At first dispatch, establish the recipient's actually exposed native messaging capability once, using tool definitions and the first necessary plan/notice; no extra handshake. Separately exposed collaboration APIs need not appear in a nested tool registry; registry absence alone does not prove unavailability. Use returned agent IDs. Lead records the working route or finite-handoff fallback alongside ownership in status and includes it in follow-ups. Recheck only after an actual capability failure or changed runtime, not each turn/compaction. Do not repeatedly search for tools, read parent task history, or use separate user-owned task messaging to communicate. Missing messaging uses §6's fallback; missing required delegation/reactivation follows §1. Workers/reviewer may discuss agreed contracts directly where supported; Lead resolves decisions. Reuse workers during corrections. Consider fresh worker context at an accepted, materially different slice boundary when old context is dominated by completed work; transfer relevant contracts/evidence and preserve counts. No scheduled rotation.
 
@@ -120,22 +128,34 @@ Focused checks during implementation/correction; substantive candidate clearance
 
 **Waiting rule — include verbatim in every dispatch; Root obeys it too:**
 
-> Prefer event-aware agent waits: Root 300 seconds; Lead 180 seconds. These are
-> targets, bounded by tool limits, higher-priority wait/update instructions, and
-> time remaining to the next supervision/diagnostic deadline. Honor a 60-second
-> runtime cap when present; never claim a skill overrides it. Workers resume
-> command handles with substantial supported waits. Handle messages/completion
-> promptly when the wait returns early. Do not substitute fixed sleeps, repeated
-> log reads, or process-status checks. A timeout alone justifies no status request.
+> Prefer event-aware agent waits: Root 300 seconds; Lead 180 seconds, bounded by
+> tool limits, higher-priority wait/update instructions, and the next actual
+> supervision/diagnostic deadline. Honor a 60-second runtime limit when present.
+> No new information and no deadline due → immediately wait again; no status/file
+> reads, agent/log inspections, progress requests, tracking writes, or replanning
+> solely because of timeout. Handle relevant messages/completion promptly.
+> Workers own command-handle waits/results; managers do not duplicate polling.
+> Do not substitute fixed sleeps, extra agents, or scheduled automations.
 
-Waiting applies while work is active; a reviewer with no assessable request returns under §5 instead of entering a wait loop. Set supported wait arguments explicitly; cap each wait at the next actual deadline and assess it when due, without resetting clocks. If the tool's minimum wait exceeds the remaining interval, use the shortest supported wait and check promptly on return. Record a runtime-imposed shorter cadence once per assignment; disclose that longer-wait savings are inactive, without repeating that explanation each timeout. Other shorter waits need a concrete reason: interactive input, imminent cancellation, tool limit. “Checking if finished” is insufficient. Required user updates use concise known state; they do not trigger worker polling. Read output for real failures/stalls.
+**After a wait returns:**
 
-Lead checks initial implementer waits and again after Astra transfer. Unjustified short polling → one correction → verify next wait; continued violations use existing stall rules. Root checks team compliance during scheduled supervision. The execution-stall check below is a specific diagnostic trigger, not permission per command, an extra monitor, or routine status polling. Live waits provide no recurring automation/inactive-task wakeup guarantee.
+| Result | Action |
+|---|---|
+| No new information; no deadline due | Wait again; satisfy mandatory user updates from known state only |
+| Relevant message/completion | Handle the new information; retrieve supporting evidence only as needed |
+| Supervision/execution diagnostic due | Perform the existing bounded check (§7/below) |
+| User instruction/concrete blocker | Respond, steer, or escalate within existing authority |
+
+Handle applicable events without losing due deadlines. Keep the next deadline in working state; preserve it across waits/compaction using existing tracking (§2). Use reliable timestamps or a clock read when needed to assess it; do not infer time from requested waits, which may return early. Set wait arguments explicitly, capped at the next deadline. If the tool minimum exceeds the remaining interval, use its shortest supported wait and check promptly on return. Other shorter waits need a concrete reason: interactive input, imminent cancellation, tool limit; “checking if finished” is insufficient.
+
+Longer waits reduce timeout wakeups only when the runtime permits them. Record/disclose a shorter runtime cadence once per assignment; do not promise inactive savings or repeat the explanation each timeout. Under that limit, use the same decision table. A reviewer without assessable work returns (§5); an active supervisor must not end its turn merely to avoid waiting. Live waits do not guarantee automatic reactivation after a turn ends.
+
+Lead checks initial implementer waits and again after Astra transfer. Unjustified short polling → one correction → verify next wait; continued violations use existing stall rules. Root checks team compliance during scheduled supervision. The execution-stall check below is a specific diagnostic trigger, not permission per command, an extra monitor, or routine status polling.
 
 **Execution-stall check — Lead owns it; independent of §7:**
 
 - Before elevated execution or another known approval-sensitive operation, worker sends Lead `operation + command/directory | elevated access/reason | expected initial outcome: approval/result/handle | evidence/log location`. Ordinary commands need no notice. Use the established route. Without native messaging, return one necessary pre-execution notice; Lead records it and reactivates the same worker for the complete execution/result cycle. This is tracking, not new user approval; existing execution permissions still apply.
-- **Worker owns execution through result:** After notice/necessary reactivation, execute, resume the same running handle, collect the result and checkpoint cleanup autonomously. A handle, ordinary timeout, or ongoing log output is not a final-answer/handoff boundary. Do not require Lead to reactivate each resume. Return for completed evidence, a real blocker/required decision, review checkpoint, or explicit diagnostic; honor pause/interrupt instructions. No duplicate execution or ownership transfer merely to wait.
+- **Worker owns execution through result:** After notice/necessary reactivation, execute, resume the same running handle with substantial permitted waits, collect the result and checkpoint cleanup autonomously. Managers do not also poll that command or request routine intermediate progress. A handle, ordinary timeout, or ongoing output is not a final-answer/handoff boundary; Lead does not reactivate each resume. Return for completed evidence, a real blocker/decision, required checkpoint, or explicit diagnostic; honor pause/interrupt instructions. Preserve required initial-outcome reporting below. No duplicate execution or ownership transfer merely to wait.
 - Lead records one compact current-operation entry in `status.md`: `operation | start/timezone | state | latest evidence | diagnostic deadline/recovery used`. States: `awaiting tool response` (no result/handle), `running` (handle or concrete process evidence), `blocked` (approval/permission/execution obstacle). Worker sends the initial outcome through native messaging without ending its turn. Without messaging, record the matching operation/start time and initial result/handle in the existing worker-owned evidence location named in the notice, then continue; do not edit Lead-owned status or create a per-command document. This record is inspectable evidence, not an automatic notification. Lead inspects it only for a relevant event or the diagnostic below. Silence or generic agent-running status proves no command execution. Known blockers return/report immediately.
 - After **five minutes without an initial response or execution evidence**, Lead checks the named execution evidence and available agent/tool state once at the next supported wait boundary. Read an actual clock; preserve elapsed time across compaction/handoff. This diagnoses an unresolved invocation, not ordinary test duration. A running process with a handle follows the waiting rule. No faster polling, timer promises, or automatic termination of running tests.
 - If state remains unclear, obtain one finite worker diagnostic: `exact operation/directory | last tool response | approval outcome or unknown | handle/process evidence | temporary mutation/restoration pending`. Safely interrupt the worker turn if needed, then reactivate for that diagnostic. Interruption/abort does not prove the underlying process stopped or never started. If interruption/diagnosis is unavailable, report that limitation promptly to Root.
@@ -148,7 +168,7 @@ At acceptance/escalation, record outcomes, attempts, readily available time/usag
 
 At dispatch, read actual clock. Record in progress: assignment/agent ID, start + timezone, next check = start+60m, last assessment, per-blocker identity/evidence/consecutive-stall count. Preserve across compaction and worker/slice/Lead replacement; no timer/count reset for the same assignment.
 
-Wait within tool limits; handle user input/exceptions. A wait timeout without new information → wait again; no status reads/requests, log inspection, or worker checks merely because the wait returned. Only a meaningful report, user request, scheduled check, or concrete exception triggers Root assessment. Completion before deadline → handoff. Overdue resume → one real check promptly, never fabricated missed checks or two catch-up observations. After each actual check, next = check+30m. Steering/off-schedule messages do not change deadlines or scheduled counts; retain useful evidence. Immediate decisions/user-directed stops remain allowed.
+Use §6’s wait-return decision table; assess only meaningful reports, user requests, scheduled checks, or concrete exceptions. Completion before deadline → handoff. Overdue resume → one real check promptly, never fabricated missed checks or two catch-up observations. After each actual check, next = check+30m. Steering/off-schedule messages do not change deadlines or scheduled counts; retain useful evidence. Immediate decisions/user-directed stops remain allowed.
 
 At each check, use current status and received Lead reports to assess concrete implementation/verification progress, repeated failures/coordination loops, scope, and waiting compliance. If evidence is insufficient, ask Lead one targeted question or inspect the specific linked artifact; do not routinely read child histories, raw logs, source, or repeat Lead's diagnosis. Record only the assessment delta and next check; no duplicate technical review or lengthy repeated reports.
 
